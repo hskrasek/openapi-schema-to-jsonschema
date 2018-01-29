@@ -1,4 +1,24 @@
 {
+    "name": "hskrasek/openapi-schema-to-json-schema",
+    "type": "library",
+    "description": "PHP library to convert OpenAPI schema objects to JSON Schema",
+    "keywords": [
+        "openapi",
+        "json",
+        "schema",
+        "convert",
+        "converter"
+    ],
+    "homepage": "https://github.com/hskrasek/openapi-schema-to-json-schema",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hunter Skrasek",
+            "email": "hunterskrasek@me.com",
+            "homepage": "https://hunterskrasek@me.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": ">=7.1",
         "symfony/serializer": "^4.0",
@@ -23,9 +43,18 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "squizlabs/php_codesniffer": "^2.3"
     },
-    "scripts": [
+    "bin": [
         "bin/oas-to-jsonschema"
-    ]
+    ],
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "check-style": "vendor/bin/phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+    },
+    "config": {
+        "sort-packages": true
+    }
 }
