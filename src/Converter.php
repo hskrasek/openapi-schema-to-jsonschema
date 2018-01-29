@@ -29,8 +29,6 @@ class Converter
 
     public function __construct(?array $options = null)
     {
-        //TODO: Maybe serialize the OpenAPI Schema Objects into POPO, to make converter logic better?
-        //TODO: Tests
         $this->options = $this->createOptions($options ?: []);
     }
 
@@ -82,7 +80,7 @@ class Converter
 
         $schema = $this->convertTypes($schema);
 
-        if (\is_array(data_get($schema, 'x-patternProperties')) && $this->options['support_pattern_properties']) {
+        if (\is_object(data_get($schema, 'x-patternProperties')) && $this->options['support_pattern_properties']) {
             $schema = $this->convertPatternProperties($schema, $this->options['pattern_properties_handler']);
         }
 
@@ -99,12 +97,13 @@ class Converter
             $removeProperty = false;
 
             foreach ($this->options['remove_properties'] as $prop) {
-                if ($property[$prop] === true) {
+                if (data_get($property, $prop) === true) {
                     $removeProperty = true;
                 }
             }
 
             if ($removeProperty) {
+                $this->removeFromSchema($properties, $key);
                 continue;
             }
 
@@ -197,10 +196,10 @@ class Converter
             }
         }
 
-        return $required;
+        return array_values($required);
     }
 
-    private function convertPatternProperties($schema, callable $handler): array
+    private function convertPatternProperties($schema, callable $handler)
     {
         data_set($schema, 'patternProperties', data_get($schema, 'x-patternProperties'));
         $this->removeFromSchema($schema, 'x-patternProperties');
@@ -208,19 +207,17 @@ class Converter
         return call_user_func($handler, $schema);
     }
 
-    private function patternPropertiesHandler($schema): array
+    private function patternPropertiesHandler($schema)
     {
-        $patternProperties = $schema['patternProperties'];
+        $patternProperties = data_get($schema,'patternProperties');
 
-        if (!array_key_exists('additionalProperties', $schema)) {
+        if (!\is_object($additionalProperties = data_get($schema, 'additionalProperties'))) {
             return $schema;
         }
 
-        $additionalProperties = $schema['additionalProperties'];
-
         foreach ($patternProperties as $patternProperty) {
             if ($patternProperty == $additionalProperties) {
-                $schema['additionalProperties'] = false;
+                data_set($schema, 'additionalProperties', false);
                 break;
             }
         }
