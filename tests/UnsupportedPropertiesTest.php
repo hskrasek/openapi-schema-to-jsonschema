@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hunterskrasek
- * Date: 1/29/18
- * Time: 1:05 PM
- */
 
 namespace HSkrasek\OpenAPI\Tests;
 
