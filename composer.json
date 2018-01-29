@@ -1,0 +1,26 @@
+{
+    "require": {
+        "php": ">=7.1",
+        "symfony/serializer": "^4.0",
+        "symfony/yaml": "^4.0",
+        "league/json-reference": "^1.0",
+        "symfony/property-access": "^4.0",
+        "symfony/property-info": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "HSkrasek\\OpenAPI\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HSkrasek\\OpenAPI\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    }
+}
