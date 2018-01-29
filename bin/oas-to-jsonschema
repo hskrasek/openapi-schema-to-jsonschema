@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+$autoloaders = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+
+foreach ($autoloaders as $autoloader) {
+    if (file_exists($autoloader)) {
+        require_once $autoloader;
+        break;
+    }
+}
+
+use HSkrasek\OpenAPI\Converter;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Plugin\ListFiles;
+use Symfony\Component\Console\Application;
+
+$application = new Application('OpenAPI to JSON Schema Converter', '0.1.0');
+
+$adapter = new Local(getcwd());
+$filesystem = new Filesystem($adapter);
+$filesystem->addPlugin(new ListFiles());
+
+$application->add(new \HSkrasek\OpenAPI\Command\ConvertCommand($filesystem, new Converter));
+$application->run();
