@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "title": "Attendee Response",
+    "properties": {
+        "data": {
+            "type": "object",
+            "properties": {
+                "attendee": {
+                    "$ref": ".\/Attendee.json"
+                }
+            },
+            "required": [
+                "attendee"
+            ]
+        }
+    },
+    "required": [
+        "data"
+    ],
+    "$schema": "http:\/\/json-schema.org\/draft-04\/schema#"
+}

@@ -1,0 +1,15 @@
+type: object
+title: Conference
+description: >-
+  The object describing a tech conference
+properties:
+  name:
+    type: string
+  start_date:
+    type: dateTime
+  end_date:
+    type: dateTime
+required:
+  - name
+  - start_date
+  - end_date
