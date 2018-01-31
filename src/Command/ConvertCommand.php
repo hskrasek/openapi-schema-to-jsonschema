@@ -111,10 +111,12 @@ class ConvertCommand extends Command
             return json_decode($this->filesystem->read($openApiSchemaFile['path']));
         }
 
+        // @codingStandardsIgnoreStart
         return Yaml::parse(
             $this->filesystem->read($openApiSchemaFile['path']),
             Yaml::PARSE_OBJECT | Yaml::PARSE_OBJECT_FOR_MAP | Yaml::PARSE_DATETIME | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE
         );
+        // @codingStandardsIgnoreEnd
     }
 
     /**
