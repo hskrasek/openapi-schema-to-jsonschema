@@ -68,12 +68,12 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-travis]: https://img.shields.io/travis/hskrasek/openapi-schema-to-jsonschema/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/hskrasek/openapi-schema-to-jsonschema.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/hskrasek/openapi-schema-to-jsonschema.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/hskrasek/openapi-schema-to-jsonschema.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/hskrasek/openapi-schema-to-json-schema.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/hskrasek/openapi-schema-to-json-schema
 [link-travis]: https://travis-ci.org/hskrasek/openapi-schema-to-jsonschema
 [link-scrutinizer]: https://scrutinizer-ci.com/g/hskrasek/openapi-schema-to-jsonschema/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/hskrasek/openapi-schema-to-jsonschema
-[link-downloads]: https://packagist.org/packages/hskrasek/openapi-schema-to-jsonschema
+[link-downloads]: https://packagist.org/packages/hskrasek/openapi-schema-to-json-schema
 [link-author]: https://github.com/hskrasek
 [link-contributors]: ../../contributors
