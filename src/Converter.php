@@ -33,11 +33,11 @@ class Converter
     }
 
     /**
-     * @param object $schema
+     * @param mixed $schema
      *
-     * @return array|object
+     * @return mixed
      */
-    public function convert(object $schema)
+    public function convert($schema)
     {
         $schema = $this->convertSchema($schema);
         data_set($schema, '$schema', 'http://json-schema.org/draft-04/schema#');
@@ -46,9 +46,9 @@ class Converter
     }
 
     /**
-     * @param array|object $schema
+     * @param mixed $schema
      *
-     * @return array|object
+     * @return mixed
      */
     private function convertSchema($schema)
     {
@@ -125,9 +125,9 @@ class Converter
         }
 
         if (data_get($schema, 'type') === 'string' && data_get(
-                $schema,
-                'format'
-            ) === 'date' && $this->options['convert_date'] === true) {
+            $schema,
+            'format'
+        ) === 'date' && $this->options['convert_date'] === true) {
             data_set($schema, 'format', 'date-time');
         }
 
@@ -209,7 +209,7 @@ class Converter
 
     private function patternPropertiesHandler($schema)
     {
-        $patternProperties = data_get($schema,'patternProperties');
+        $patternProperties = data_get($schema, 'patternProperties');
 
         if (!\is_object($additionalProperties = data_get($schema, 'additionalProperties'))) {
             return $schema;
