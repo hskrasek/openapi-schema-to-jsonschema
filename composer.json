@@ -26,7 +26,7 @@
         "league/json-reference": "^1.0",
         "symfony/property-access": "^4.0",
         "symfony/property-info": "^4.0",
-        "symfony/console": "^4.0",
+        "symfony/console": "~3.3 | ^4.0",
         "league/flysystem": "^1.0"
     },
     "autoload": {
