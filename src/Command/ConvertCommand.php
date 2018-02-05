@@ -2,14 +2,12 @@
 
 namespace HSkrasek\OpenAPI\Command;
 
-use HSkrasek\OpenAPI\Converter;
 use League\Flysystem\FilesystemInterface;
+use League\Pipeline\Pipeline;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 class ConvertCommand extends Command
 {
@@ -19,16 +17,16 @@ class ConvertCommand extends Command
     private $filesystem;
 
     /**
-     * @var Converter
+     * @var Pipeline
      */
-    private $converter;
+    private $pipeline;
 
-    public function __construct(FilesystemInterface $filesystem, Converter $converter)
+    public function __construct(FilesystemInterface $filesystem, Pipeline $pipeline)
     {
-        $this->filesystem = $filesystem;
-        $this->converter  = $converter;
-
         parent::__construct();
+
+        $this->filesystem = $filesystem;
+        $this->pipeline   = $pipeline;
     }
 
     protected function configure()
@@ -45,12 +43,6 @@ class ConvertCommand extends Command
                 'output',
                 InputArgument::REQUIRED,
                 'The directory to output the converted JSON Schema files'
-            )
-            ->addOption(
-                'overwrite',
-                'w',
-                InputOption::VALUE_NONE,
-                'Whether or not to overwrite existing JSON Schema files'
             );
     }
 
@@ -70,84 +62,8 @@ class ConvertCommand extends Command
             $this->filesystem->createDir($jsonSchemaDirectory);
         }
 
-        $openApiSchemaFiles = $this->getOpenAPISchemaFiles($oasDirectory);
+        $convertedFiles = $this->pipeline->process([$oasDirectory, $jsonSchemaDirectory]);
 
-        if (empty($openApiSchemaFiles)) {
-            $output->writeln("No OpenAPI schema files found.");
-
-            return -1;
-        }
-
-        $jsonSchemaFiles = $this->convertOpenAPISchemaFiles($openApiSchemaFiles);
-
-        $this->saveConvertedJsonSchema($jsonSchemaFiles, $jsonSchemaDirectory, $input->getOption('overwrite') ?? false);
-
-        $output->writeln('<info>Successfully converted ' . count($jsonSchemaFiles) . ' </info>');
-    }
-
-    private function getOpenAPISchemaFiles(string $directory): array
-    {
-        return array_filter($this->filesystem->listFiles($directory), function (array $file) {
-            return \in_array($file['extension'], ['json', 'yml', 'yaml'], true);
-        });
-    }
-
-    private function convertOpenAPISchemaFiles(array $openApiSchemaFiles): array
-    {
-        $convertedSchemaFiles = [];
-
-        foreach ($openApiSchemaFiles as $openApiSchemaFile) {
-            $convertedSchemaFiles[$openApiSchemaFile['filename'] . '.json'] = $this->converter->convert(
-                $this->getOpenAPISchemaContents($openApiSchemaFile)
-            );
-        }
-
-        return $convertedSchemaFiles;
-    }
-
-    private function getOpenAPISchemaContents(array $openApiSchemaFile): object
-    {
-        if ($openApiSchemaFile['extension'] === 'json') {
-            return json_decode($this->filesystem->read($openApiSchemaFile['path']));
-        }
-
-        // @codingStandardsIgnoreStart
-        return Yaml::parse(
-            $this->filesystem->read($openApiSchemaFile['path']),
-            Yaml::PARSE_OBJECT | Yaml::PARSE_OBJECT_FOR_MAP | Yaml::PARSE_DATETIME | Yaml::PARSE_EXCEPTION_ON_INVALID_TYPE
-        );
-        // @codingStandardsIgnoreEnd
-    }
-
-    /**
-     * @param array $jsonSchemaFiles
-     * @param string $jsonSchemaDirectory
-     *
-     * @param bool $overwrite
-     *
-     * @throws \League\Flysystem\FileExistsException
-     */
-    protected function saveConvertedJsonSchema(
-        array $jsonSchemaFiles,
-        string $jsonSchemaDirectory,
-        bool $overwrite = false
-    ): void {
-        foreach ($jsonSchemaFiles as $filename => $jsonSchemaFile) {
-            $schemaPath = $jsonSchemaDirectory . DIRECTORY_SEPARATOR . $filename;
-
-            if ($this->filesystem->has($schemaPath) && $overwrite) {
-                $this->filesystem->put(
-                    $schemaPath,
-                    json_encode($jsonSchemaFile, JSON_PRETTY_PRINT)
-                );
-
-                continue;
-            }
-
-            $this->filesystem->write(
-                $schemaPath,
-                json_encode($jsonSchemaFile, JSON_PRETTY_PRINT)
-            );
-        }
+        $output->writeln("<info>Successfully converted $convertedFiles schema files</info>");
     }
 }

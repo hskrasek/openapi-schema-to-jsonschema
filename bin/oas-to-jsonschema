@@ -13,17 +13,32 @@ foreach ($autoloaders as $autoloader) {
     }
 }
 
+use HSkrasek\OpenAPI\Command\ConvertCommand;
+use HSkrasek\OpenAPI\Command\Stages\ConvertSchemaObject;
+use HSkrasek\OpenAPI\Command\Stages\GetOpenAPISchemaFiles;
+use HSkrasek\OpenAPI\Command\Stages\ParseSchemaFile;
+use HSkrasek\OpenAPI\Command\Stages\ProcessSchemaFiles;
+use HSkrasek\OpenAPI\Command\Stages\SaveJsonSchema;
 use HSkrasek\OpenAPI\Converter;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Plugin\ListFiles;
+use League\Pipeline\PipelineBuilder;
 use Symfony\Component\Console\Application;
 
-$application = new Application('OpenAPI to JSON Schema Converter', '0.1.0');
+$filesystem = new Filesystem(new Local(getcwd()));
+$filesystem->addPlugin(new ListFiles);
 
-$adapter = new Local(getcwd());
-$filesystem = new Filesystem($adapter);
-$filesystem->addPlugin(new ListFiles());
+$pipelineBuilder = (new PipelineBuilder)
+    ->add(new GetOpenAPISchemaFiles($filesystem))
+    ->add(new ProcessSchemaFiles(
+        (new PipelineBuilder)
+            ->add(new ParseSchemaFile($filesystem))
+            ->add(new ConvertSchemaObject(new Converter))
+            ->build()
+    ))
+    ->add(new SaveJsonSchema($filesystem));
 
-$application->add(new \HSkrasek\OpenAPI\Command\ConvertCommand($filesystem, new Converter));
+$application = new Application('OpenAPI to JSON Schema Converter', '0.2.0');
+$application->add(new ConvertCommand($filesystem, $pipelineBuilder->build()));
 $application->run();
