@@ -21,6 +21,8 @@ class ParseSchemaFile implements StageInterface
      */
     public function __invoke($payload)
     {
-        return ParserFactory::make($payload['extension'])->parse($this->filesystem->read($payload['path']));
+        return ParserFactory::make()->parse(
+            $this->filesystem->getAdapter()->getPathPrefix() . DIRECTORY_SEPARATOR . $payload['path']
+        );
     }
 }
