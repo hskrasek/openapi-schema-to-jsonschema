@@ -1,0 +1,16 @@
+{
+    "title": "OpenAPI Schema Object Stub",
+    "description": "A OpenAPI Schema Object stub written in JSON",
+    "type": "object",
+    "properties": {
+        "foo": {
+            "type": "string"
+        },
+        "bar": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "foo"
+    ]
+}

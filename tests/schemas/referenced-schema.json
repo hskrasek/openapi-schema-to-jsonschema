@@ -1,0 +1,12 @@
+{
+    "title": "Referenced Schema Object",
+    "description": "A Schema Object with JSON References",
+    "properties": {
+        "json": {
+            "$ref": "schema.json"
+        },
+        "yaml": {
+            "$ref": "schema.yaml"
+        }
+    }
+}
