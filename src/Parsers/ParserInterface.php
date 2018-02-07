@@ -7,10 +7,10 @@ interface ParserInterface
     /**
      * Parse the raw schema file into an object.
      *
-     * @param string $schemaPath
+     * @param string $schemaContent
      *
      * @return \stdClass
      * @throws ParseException
      */
-    public function parse(string $schemaPath): \stdClass;
+    public function parse(string $schemaContent): \stdClass;
 }

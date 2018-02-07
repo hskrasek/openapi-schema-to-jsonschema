@@ -2,29 +2,21 @@
 
 namespace HSkrasek\OpenAPI\Parsers;
 
-use HSkrasek\OpenAPI\Loaders\ChainedDecoderFileLoader;
-use League\JsonReference\Dereferencer;
-use League\JsonReference\ReferenceSerializer\InlineReferenceSerializer;
-
 class ParserFactory
 {
     /**
-     * @var Dereferencer
-     */
-    private static $dereferencer;
-
-    /**
-     * Create a parser capable of dereferencing schemas
+     * Create a parser based on the provided format
+     *
+     * @param string $format
      *
      * @return ParserInterface
      */
-    public static function make(): ParserInterface
+    public static function make(string $format): ParserInterface
     {
-        if (null === self::$dereferencer) {
-            self::$dereferencer = (new Dereferencer)->setReferenceSerializer(new InlineReferenceSerializer);
-            self::$dereferencer->getLoaderManager()->registerLoader('file', new ChainedDecoderFileLoader);
+        if (strtolower($format) === 'json') {
+            return new JsonParser;
         }
 
-        return new Parser(self::$dereferencer);
+        return new YamlParser;
     }
 }
