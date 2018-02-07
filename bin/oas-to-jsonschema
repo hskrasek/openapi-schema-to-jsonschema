@@ -23,11 +23,16 @@ use HSkrasek\OpenAPI\Converter;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Plugin\ListFiles;
+use League\JsonReference\Dereferencer;
+use League\JsonReference\ReferenceSerializer\InlineReferenceSerializer;
 use League\Pipeline\PipelineBuilder;
 use Symfony\Component\Console\Application;
 
 $filesystem = new Filesystem(new Local(getcwd()));
 $filesystem->addPlugin(new ListFiles);
+
+$dereferencer = Dereferencer::draft4();
+$dereferencer->setReferenceSerializer(new InlineReferenceSerializer);
 
 $pipelineBuilder = (new PipelineBuilder)
     ->add(new GetOpenAPISchemaFiles($filesystem))
@@ -35,7 +40,8 @@ $pipelineBuilder = (new PipelineBuilder)
         (new PipelineBuilder)
             ->add(new ParseSchemaFile($filesystem))
             ->add(new ConvertSchemaObject(new Converter))
-            ->build()
+            ->build(),
+        $dereferencer
     ))
     ->add(new SaveJsonSchema($filesystem));
 
