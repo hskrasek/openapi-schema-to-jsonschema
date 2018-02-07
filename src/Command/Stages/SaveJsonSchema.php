@@ -21,7 +21,7 @@ class SaveJsonSchema implements StageInterface
     public function __invoke($payload)
     {
         foreach ($payload[0] as $filename => $jsonSchema) {
-            $schemaPath = $payload[1] . DIRECTORY_SEPARATOR . $filename;
+            $schemaPath = $payload[1] . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME) . '.json';
 
             if ($this->filesystem->has($schemaPath)) {
                 $this->filesystem->delete($schemaPath);
