@@ -36,12 +36,12 @@
                 }
             },
             "required": [
-                "name",
                 "street2",
                 "zip_code",
                 "state",
                 "country"
-            ]
+            ],
+            "$schema": "http:\/\/json-schema.org\/draft-04\/schema#"
         }
     },
     "required": [
