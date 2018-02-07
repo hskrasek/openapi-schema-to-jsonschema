@@ -9,6 +9,8 @@ properties:
     type: dateTime
   end_date:
     type: dateTime
+  address:
+    $ref: "Address.yaml"
 required:
   - name
   - start_date

@@ -1,0 +1,29 @@
+{
+    "type": "object",
+    "title": "Address",
+    "description": "An address describing a location",
+    "properties": {
+        "street": {
+            "type": "string"
+        },
+        "street2": {
+            "type": "string"
+        },
+        "zip_code": {
+            "type": "integer"
+        },
+        "state": {
+            "type": "string"
+        },
+        "country": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "street2",
+        "zip_code",
+        "state",
+        "country"
+    ],
+    "$schema": "http:\/\/json-schema.org\/draft-04\/schema#"
+}

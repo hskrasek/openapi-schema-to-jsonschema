@@ -6,7 +6,20 @@
             "type": "object",
             "properties": {
                 "attendee": {
-                    "$ref": ".\/Attendee.json"
+                    "type": "object",
+                    "title": "Attendee",
+                    "properties": {
+                        "first_name": {
+                            "type": "string"
+                        },
+                        "last_name": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "first_name",
+                        "last_name"
+                    ]
                 }
             },
             "required": [

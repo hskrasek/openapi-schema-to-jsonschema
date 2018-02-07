@@ -1,0 +1,46 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://api.conferences.com'
+info:
+  description: >-
+    The conference API allows you to get a list of conferences, talks,
+    tutorials, speakers and attendees for various conferences across the nation.
+  version: 1.0.0
+  title: Conference API
+  contact:
+    name: Hunter Skrasek
+    url: 'https://twitter.com/hskrasek'
+tags:
+  - name: attendees
+    description: Find out who is attending a conference
+  - name: conferences
+    description: Find out what conferences have passed, and which ones are in the future
+  - name: talks
+    description: Find out what talks speakers are giving
+paths:
+  /attendees:
+    post:
+      tags:
+        - attendees
+      operationId: create-attendee
+      summary: Add a new attendee to the conference
+      requestBody:
+        description: Attendee to add to the conference
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAttendee'
+      responses:
+        '201':
+          description: Successfully added an attendee to the conference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendeeResponse'
+components:
+  schemas:
+    NewAttendee:
+      $ref: 'schemas/NewAttendee.json'
+    AttendeeResponse:
+      $ref: 'schemas/AttendeeResponse.json'
